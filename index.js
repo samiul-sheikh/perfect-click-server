@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
-const { MongoClient } = require('mongodb');
+const {MongoClient} = require('mongodb');
+const ObjectID = require('mongodb').ObjectID;
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config()
@@ -13,15 +14,16 @@ app.use(bodyParser.json());
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
-    const serviceCollection = client.db("perfectClick").collection("services");
     console.log('DB connected successfully');
+    const serviceCollection = client.db("perfectClick").collection("services");
 
+    // add services in server
     app.post('/addService', (req, res) => {
         const newService = req.body;
-        console.log('adding new service: ', newService);
+        // console.log('adding new service: ', newService);
         serviceCollection.insertOne(newService)
             .then(result => {
-                console.log('inserted count ', result.insertedCount)
+                // console.log('inserted count ', result.insertedCount)
                 res.send(result.insertedCount > 0)
             })
     })
@@ -31,7 +33,17 @@ client.connect(err => {
         serviceCollection.find()
             .toArray((err, services) => {
                 res.send(services)
-                console.log('from database', services)
+                // console.log('from database', services)
+            })
+    })
+
+    // display service information in ui
+    app.get('/service/:id', (req, res) => {
+        const id = ObjectID(req.params.id);
+        serviceCollection.find({_id: id})
+            .toArray((err, service) => {
+                res.send(service[0])
+                // console.log('from database', service[0])
             })
     })
 
