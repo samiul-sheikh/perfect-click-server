@@ -1,16 +1,16 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const {MongoClient} = require('mongodb');
 const ObjectID = require('mongodb').ObjectID;
-const cors = require('cors');
 const bodyParser = require('body-parser');
-require('dotenv').config()
+const cors = require('cors');
+require('dotenv').config();
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.2uohe.mongodb.net/perfectClick?retryWrites=true&w=majority`;
 const port = process.env.PORT || 5000;
 
-app.use(cors());
 app.use(bodyParser.json());
+app.use(cors());
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
@@ -38,14 +38,14 @@ client.connect(err => {
     })
 
     // display service information in ui
-    app.get('/service/:id', (req, res) => {
-        const id = ObjectID(req.params.id);
-        serviceCollection.find({_id: id})
-            .toArray((err, service) => {
-                res.send(service[0])
-                // console.log('from database', service[0])
-            })
-    })
+    // app.get('/service/:id', (req, res) => {
+    //     const id = ObjectID(req.params.id);
+    //     serviceCollection.find({_id: id})
+    //         .toArray((err, services) => {
+    //             // res.send(service[0])
+    //             console.log('from database', services[0])
+    //         })
+    // })
 
 });
 
