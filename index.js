@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const {MongoClient} = require('mongodb');
+const { MongoClient } = require('mongodb');
 const ObjectID = require('mongodb').ObjectId;
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -16,6 +16,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     console.log('DB connected successfully');
     const serviceCollection = client.db("perfectClick").collection("services");
+    const orderCollection = client.db("perfectClick").collection("orderService");
 
     app.get('/', (req, res) => {
         res.send('Welcome to Perfect Click server!')
@@ -41,7 +42,7 @@ client.connect(err => {
     // display service details in serviceInformation page 
     app.get('/service/:id', (req, res) => {
         const id = ObjectID(req.params.id);
-        serviceCollection.find({_id: id})
+        serviceCollection.find({ _id: id })
             .toArray((err, service) => {
                 res.send(service[0])
             })
@@ -50,10 +51,21 @@ client.connect(err => {
     // display service information in Checkout page
     app.get('/service/:id', (req, res) => {
         const id = ObjectID(req.params.id);
-        serviceCollection.find({_id: id})
+        serviceCollection.find({ _id: id })
             .toArray((err, service) => {
                 res.send(service[0])
             })
+    })
+
+    // store checkOut service information in database
+    app.post('/addOrder', (req, res) => {
+        const newOrder = req.body;
+        orderCollection.insertOne(newOrder)
+            .then(result => {
+                // console.log(result)
+                res.send(result.insertedCount > 0);
+            })
+        // console.log(newOrder);
     })
 
 });
