@@ -68,6 +68,14 @@ client.connect(err => {
         // console.log(newOrder);
     })
 
+    // display all ordered services in Orders page
+    app.get('/orders', (req, res) => {
+        orderCollection.find()
+            .toArray((err, result) => {
+                res.send(result);
+            })
+    })
+
 });
 
 
