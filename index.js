@@ -76,6 +76,15 @@ client.connect(err => {
             })
     })
 
+    // display ordered services in Orders page for specific user
+    app.get('/orders', (req, res) => {
+        // console.log(req.query.email);
+        orderCollection.find({ email: req.query.email })
+            .toArray((err, result) => {
+                res.send(result);
+            })
+    })
+
 });
 
 
