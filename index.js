@@ -17,7 +17,7 @@ client.connect(err => {
     console.log('DB connected successfully');
     const serviceCollection = client.db("perfectClick").collection("services");
     const orderCollection = client.db("perfectClick").collection("orderService");
-    const reviewCollection = client.db("perfectClick").collection("review");
+    const testimonialCollection = client.db("perfectClick").collection("testimonials");
 
     app.get('/', (req, res) => {
         res.send('Welcome to Perfect Click server!')
@@ -86,19 +86,18 @@ client.connect(err => {
             })
     })
 
-    // store review information  to server
-    app.post('/addReview', (req, res) => {
-        const newReview = req.body;
-        console.log('adding new review: ', newReview)
-        reviewCollection.insertOne(newReview)
+    // store testimonials information  to server
+    app.post('/addTestimonial', (req, res) => {
+        const newTestimonial = req.body;
+        testimonialCollection.insertOne(newTestimonial)
             .then(result => {
                 res.send(result.insertedCount > 0)
             })
     })
 
-    // display review information dynamically in homepage
-    app.get('/reviews', (req, res) => {
-        reviewCollection.find()
+    // display testimonials dynamically in homepage
+    app.get('/testimonials', (req, res) => {
+        testimonialCollection.find()
             .toArray((err, items) => {
                 res.send(items)
             })
