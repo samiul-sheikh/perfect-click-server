@@ -96,6 +96,14 @@ client.connect(err => {
             })
     })
 
+    // display review information dynamically in homepage
+    app.get('/reviews', (req, res) => {
+        reviewCollection.find()
+            .toArray((err, items) => {
+                res.send(items)
+            })
+    })
+
 });
 
 
