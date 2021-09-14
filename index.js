@@ -17,6 +17,7 @@ client.connect(err => {
     console.log('DB connected successfully');
     const serviceCollection = client.db("perfectClick").collection("services");
     const orderCollection = client.db("perfectClick").collection("orderService");
+    const reviewCollection = client.db("perfectClick").collection("review");
 
     app.get('/', (req, res) => {
         res.send('Welcome to Perfect Click server!')
@@ -82,6 +83,16 @@ client.connect(err => {
         orderCollection.find({ email: req.query.email })
             .toArray((err, result) => {
                 res.send(result);
+            })
+    })
+
+    // store review information  to server
+    app.post('/addReview', (req, res) => {
+        const newReview = req.body;
+        console.log('adding new review: ', newReview)
+        reviewCollection.insertOne(newReview)
+            .then(result => {
+                res.send(result.insertedCount > 0)
             })
     })
 
