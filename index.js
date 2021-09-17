@@ -27,10 +27,10 @@ client.connect(err => {
     app.post('/addService', (req, res) => {
         const newService = req.body;
         serviceCollection.insertOne(newService)
-            .then(result => {
-                res.send(result.insertedCount > 0)
-            })
-    })
+            .then((result) => {
+                res.send(result.insertedCount > 0);
+            });
+    });
 
     // display all services from server
     app.get('/services', (req, res) => {
@@ -101,6 +101,13 @@ client.connect(err => {
             .toArray((err, items) => {
                 res.send(items)
             })
+    })
+
+    // delete services from server and homepage
+    app.delete('/delete/:id', (req, res) => {
+        const id = ObjectID(req.params.id);
+        serviceCollection.findOneAndDelete({ _id: id })
+            .then(items => res.send(!!items.value))
     })
 
 });
