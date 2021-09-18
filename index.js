@@ -18,6 +18,7 @@ client.connect(err => {
     const serviceCollection = client.db("perfectClick").collection("services");
     const orderCollection = client.db("perfectClick").collection("orderService");
     const testimonialCollection = client.db("perfectClick").collection("testimonials");
+    const adminCollection = client.db("perfectClick").collection("admins");
 
     app.get('/', (req, res) => {
         res.send('Welcome to Perfect Click server!')
@@ -32,7 +33,7 @@ client.connect(err => {
             });
     });
 
-    // display all services from server
+    // display all services from server in homepage
     app.get('/services', (req, res) => {
         serviceCollection.find()
             .toArray((err, services) => {
@@ -69,8 +70,8 @@ client.connect(err => {
         // console.log(newOrder);
     })
 
-    // display all ordered services in Orders page
-    app.get('/orders', (req, res) => {
+    // display all ordered services in all order list
+    app.get('/allOrders', (req, res) => {
         orderCollection.find()
             .toArray((err, result) => {
                 res.send(result);
@@ -109,6 +110,14 @@ client.connect(err => {
         serviceCollection.findOneAndDelete({ _id: id })
             .then(items => res.send(!!items.value))
     })
+
+    // new admin information store in server
+    app.post("/makeAdmin", (req, res) => {
+        const admin = req.body;
+        adminCollection.insertOne(admin).then((result) => {
+            res.send(result.insertedCount > 0);
+        });
+    });
 
 });
 
