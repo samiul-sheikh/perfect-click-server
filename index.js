@@ -119,6 +119,20 @@ client.connect(err => {
         });
     });
 
+    // display all admins
+    app.get("/admins", (req, res) => {
+        adminCollection.find({}).toArray((err, admins) => {
+            res.send(admins);
+        });
+    });
+
+    // delete admin from all
+    app.delete('/deleteAdmin/:id', (req, res) => {
+        const id = ObjectID(req.params.id);
+        adminCollection.findOneAndDelete({ _id: id })
+            .then(items => res.send(!!items.value))
+    })
+
 });
 
 
