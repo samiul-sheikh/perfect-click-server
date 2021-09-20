@@ -6,7 +6,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.2uohe.mongodb.net/perfectClick?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.2uohe.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const port = process.env.PORT || 5000;
 
 app.use(cors());
@@ -15,10 +15,10 @@ app.use(bodyParser.json());
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
     console.log('DB connected successfully');
-    const serviceCollection = client.db("perfectClick").collection("services");
-    const orderCollection = client.db("perfectClick").collection("orderService");
-    const testimonialCollection = client.db("perfectClick").collection("testimonials");
-    const adminCollection = client.db("perfectClick").collection("admins");
+    const serviceCollection = client.db(`${process.env.DB_NAME}`).collection("services");
+    const orderCollection = client.db(`${process.env.DB_NAME}`).collection("orderService");
+    const testimonialCollection = client.db(`${process.env.DB_NAME}`).collection("testimonials");
+    const adminCollection = client.db(`${process.env.DB_NAME}`).collection("admins");
 
     app.get('/', (req, res) => {
         res.send('Welcome to Perfect Click server!')
