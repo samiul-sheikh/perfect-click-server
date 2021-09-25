@@ -133,6 +133,21 @@ client.connect(err => {
             .then(items => res.send(!!items.value))
     })
 
+    // update order status
+    app.get("/individualOrder/:id", (req, res) => {
+        orderCollection.find({ _id: ObjectID(req.params.id) })
+            .toArray((err, order) => {
+                res.send(order);
+            });
+    });
+
+    app.patch("/updateStatus", (req, res) => {
+        const { id, status } = req.body;
+        orderCollection.updateOne({ _id: ObjectID(id) }, { $set: { status: status } })
+            .then((result) => res.send(result.modifiedCount > 0));
+        console.log(result);
+    });
+
 });
 
 
